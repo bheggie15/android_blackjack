@@ -10,11 +10,11 @@
     <RelativeLayout
         android:id="@+id/dealerHand"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_toLeftOf="@+id/dealerValue"
-        />
+        android:layout_toLeftOf="@+id/dealerValue" />
     <TextView
         android:id="@+id/dealerValue"
         android:layout_width="wrap_content"
@@ -22,14 +22,15 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         />
+
     <RelativeLayout
         android:id="@+id/playerHand"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/standButton"
-        />
+
+        android:layout_toLeftOf="@+id/standButton" />
     <TextView
         android:id="@+id/playerValue"
         android:layout_width="wrap_content"

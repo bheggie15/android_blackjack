@@ -11,21 +11,24 @@ public class Board {
     private Hand playerHand;
     private int dealerValue;
     private int playerValue;
+    private boolean playerWins = false;
+    private boolean dealerWins = false;
+    private boolean dealingDone = false;
 
     public Board (){
         deckManager = DeckManager.getDeckManagerInstance();
         dealerHand = new Hand();
+        dealDealerCard();
+        dealDealerCard();
         playerHand = new Hand();
-        dealerValue = 0;
-        playerValue = 0;
+        dealPlayerCard();
+        dealPlayerCard();
+        calculateValues();
     }
 
     public void calculateValues(){
 
-        dealerValue = 0;
-        for (Card c : dealerHand.getStack()) {
-            dealerValue+= c.getValue();
-        }
+
         if (dealerValue > 21 && containsAce(dealerHand)){
             for (Card c : dealerHand.getStack()) {
                 if (c.getRank() == Rank.ACE && c.getValue() == 11){
@@ -34,11 +37,12 @@ public class Board {
                 }
             }
         }
-
-        playerValue = 0;
-        for (Card c : playerHand.getStack()) {
-            playerValue+= c.getValue();
+        dealerValue = 0;
+        for (Card c : dealerHand.getStack()) {
+            dealerValue+= c.getValue();
         }
+
+
         if (playerValue > 21 && containsAce(playerHand)){
             for (Card c : playerHand.getStack()) {
                 if (c.getRank() == Rank.ACE && c.getValue() == 11){
@@ -46,6 +50,10 @@ public class Board {
                     break;
                 }
             }
+        }
+        playerValue = 0;
+        for (Card c : playerHand.getStack()) {
+            playerValue+= c.getValue();
         }
     }
 
@@ -58,7 +66,82 @@ public class Board {
         return false;
     }
 
-    public ArrayList<Card> getDeck() {
+    public void dealersTurn(){
+        while (!checkWinner()) {
+            if (dealerValue >= 15) {
+                dealingDone = true;
+            }
+            else {
+                dealDealerCard();
+                calculateValues();
+            }
+        }
+    }
+
+    public Boolean checkWinner(){
+        if (checkPlayerBlackjack() || checkDealerBust()){
+            playerWins = true;
+            return true;
+        }
+        else if (checkDealerBlackjack() || checkPlayerBust()){
+            dealerWins = true;
+            return true;
+        }
+        else if (playerValue > dealerValue && dealingDone){
+            playerWins = true;
+            return true;
+        }
+        else if (dealerValue > playerValue && dealingDone) {
+            dealerWins = true;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private boolean checkPlayerBust(){
+        if (playerValue > 21){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private boolean checkDealerBust(){
+        if (dealerValue > 21){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    private boolean checkPlayerBlackjack(){
+        if(playerValue == 21){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    private boolean checkDealerBlackjack(){
+        if(dealerValue == 21){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public void dealPlayerCard(){
+        playerHand.addCard(deckManager.getMainDeck().popTopCard());
+    }
+    public void dealDealerCard(){
+        dealerHand.addCard(deckManager.getMainDeck().popTopCard());
+    }
+
+    public Deck getDeck() {
         return deckManager.getMainDeck();
     }
 
@@ -70,11 +153,22 @@ public class Board {
         return playerValue;
     }
 
-    public Hand getDealerHand() {
-        return dealerHand;
-    }
+    public Hand getDealerHand() { return dealerHand;}
 
     public Hand getPlayerHand() {
         return playerHand;
+    }
+
+    public void hit() {
+        dealPlayerCard();
+        calculateValues();
+    }
+
+    public boolean isPlayerWins() {
+        return playerWins;
+    }
+
+    public boolean isDealerWins() {
+        return dealerWins;
     }
 }

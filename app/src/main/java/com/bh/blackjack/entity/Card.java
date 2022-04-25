@@ -19,7 +19,7 @@ public class Card {
         this.rank = rank;
         this.suit = suit;
         this.color = suit.getSuitColor();
-        this.imageUrl = suit.toString().toLowerCase(Locale.ROOT) + rank.toString();
+        this.imageUrl = suit.toString().toLowerCase(Locale.ROOT) + rank.toString().toLowerCase(Locale.ROOT);
         this.isFaceUp = false;
         value = rank.getValue();
     }

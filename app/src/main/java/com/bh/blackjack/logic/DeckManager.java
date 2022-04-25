@@ -40,11 +40,11 @@ public class DeckManager {
         Collections.shuffle(deck);
     }
 
-    public ArrayList<Card> getMainDeck() {
+    public Deck getMainDeck() {
         if (!instance.mainDeck.hasCards()){
             recycleWaste();
         }
-        return instance.mainDeck.getStack();
+        return mainDeck;
     }
     public void recycleWaste(){
         for (Card c : wasteDeck.getStack()) {
