@@ -28,15 +28,23 @@ public class Board {
 
     public void calculateValues(){
 
-
+        dealerValue = 0;
+        for (Card c : dealerHand.getStack()) {
+            dealerValue+= c.getValue();
+        }
         if (dealerValue > 21 && containsAce(dealerHand)){
             for (Card c : dealerHand.getStack()) {
                 if (c.getRank() == Rank.ACE && c.getValue() == 11){
                     c.toggleAceValue();
+                    dealerValue = 0;
+                    for (Card ca : dealerHand.getStack()) {
+                        dealerValue+= ca.getValue();
+                    }
                     break;
                 }
             }
         }
+
         dealerValue = 0;
         for (Card c : dealerHand.getStack()) {
             if (c.getIsFaceUp()){
@@ -45,18 +53,23 @@ public class Board {
         }
 
 
-        if (playerValue > 21 && containsAce(playerHand)){
-            for (Card c : playerHand.getStack()) {
-                if (c.getRank() == Rank.ACE && c.getValue() == 11){
-                    c.toggleAceValue();
-                    break;
-                }
-            }
-        }
         playerValue = 0;
         for (Card c : playerHand.getStack()) {
             playerValue+= c.getValue();
         }
+        if (playerValue > 21 && containsAce(playerHand)){
+            for (Card c : playerHand.getStack()) {
+                if (c.getRank() == Rank.ACE && c.getValue() == 11){
+                    c.toggleAceValue();
+                    playerValue = 0;
+                    for (Card ca : playerHand.getStack()) {
+                        playerValue+= ca.getValue();
+                    }
+                    break;
+                }
+            }
+        }
+
     }
 
     public boolean containsAce (Hand hand){
