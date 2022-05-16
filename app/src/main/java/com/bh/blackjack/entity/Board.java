@@ -45,6 +45,13 @@ public class Board {
             }
         }
 
+        dealerValue = 0;
+        for (Card c : dealerHand.getStack()) {
+            if (c.getIsFaceUp()){
+                dealerValue+= c.getValue();
+            }
+        }
+
 
         playerValue = 0;
         for (Card c : playerHand.getStack()) {
@@ -76,7 +83,11 @@ public class Board {
 
     public void dealersTurn(){
         while (!checkWinner()) {
-            if (dealerValue >= 17) {
+            for (Card c:dealerHand.getStack()) {
+                c.setIsFaceUp(true);
+            }
+            calculateValues();
+            if (dealerValue >= 15) {
                 dealingDone = true;
             }
             else {
@@ -87,6 +98,7 @@ public class Board {
     }
 
     public Boolean checkWinner(){
+        calculateValues();
         if (checkPlayerBlackjack() || checkDealerBust()){
             playerWins = true;
             return true;
@@ -154,10 +166,12 @@ public class Board {
     }
 
     public int getDealerValue() {
+        calculateValues();
         return dealerValue;
     }
 
     public int getPlayerValue() {
+        calculateValues();
         return playerValue;
     }
 

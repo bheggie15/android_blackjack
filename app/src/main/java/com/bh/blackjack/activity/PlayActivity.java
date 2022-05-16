@@ -62,20 +62,20 @@ public class PlayActivity extends AppCompatActivity {
 
     public void drawBoard() {
         eraseBoard();
-
-        dealerValueLabel.setText(String.valueOf(board.getDealerValue()));
-        playerValueLabel.setText(String.valueOf(board.getPlayerValue()));
-
         int counter1 = 0;
+        board.getDealerHand().getTopCard().setIsFaceUp(true);
         for (Card c : board.getDealerHand().getStack()) {
             inflateCardLayout(dealerHandLayout, c, counter1, board.getDealerHand());
             counter1++;
         }
         int counter2 = 0;
         for (Card c : board.getPlayerHand().getStack()) {
+            c.setIsFaceUp(true);
             inflateCardLayout(playerHandLayout, c, counter2, board.getPlayerHand());
             counter2++;
         }
+        dealerValueLabel.setText(String.valueOf(board.getDealerValue()));
+        playerValueLabel.setText(String.valueOf(board.getPlayerValue()));
         checkWin();
     }
 
@@ -83,8 +83,9 @@ public class PlayActivity extends AppCompatActivity {
         if (board.checkWinner()){
             if (board.isPlayerWins()){
                 new AlertDialog.Builder(this)
+                        .setCancelable(false)
                         .setTitle("You Win!")
-                        .setMessage("Congratuations! You win!")
+                        .setMessage("Congratulations! You win!")
                         .setPositiveButton("New Game", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -102,6 +103,7 @@ public class PlayActivity extends AppCompatActivity {
             }
             else {
                 new AlertDialog.Builder(this)
+                        .setCancelable(false)
                         .setTitle("You Lose")
                         .setMessage("You love, better luck next time!")
                         .setPositiveButton("New Game", new DialogInterface.OnClickListener() {
@@ -130,7 +132,12 @@ public class PlayActivity extends AppCompatActivity {
     public void inflateCardLayout(RelativeLayout handLayout, Card c, int position, AbstractStack hand){
         View cardLayout = LayoutInflater.from(this).inflate(R.layout.card_layout, handLayout, false);
         ImageView cardImage = cardLayout.findViewById(R.id.card);
-        cardImage.setImageResource(getResources().getIdentifier("@drawable/"+ c.getImageUrl(), null, getPackageName()));
+        if (c.getIsFaceUp()){
+            cardImage.setImageResource(getResources().getIdentifier("@drawable/"+ c.getImageUrl(), null, getPackageName()));
+        }
+        else {
+            cardImage.setImageResource(R.drawable.blue_back);
+        }
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins((position*100),0,0,0);
         params.addRule(RelativeLayout.ALIGN_PARENT_START);
